@@ -1,0 +1,48 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId} {
+      allow read: if request.auth != null && (
+        request.auth.uid == userId ||
+        isCoachOfClient(userId) ||
+        isAdmin()
+      );
+      allow create: if request.auth != null && request.auth.uid == userId;
+      allow update: if request.auth != null && (
+        request.auth.uid == userId ||
+        isCoachOfClient(userId) ||
+        isAdmin()
+      );
+      allow delete: if isAdmin();
+    }
+
+    match /plans/{planId} {
+      allow read: if request.auth != null && (
+        resource.data.coachId == request.auth.uid ||
+        isClientOfPlan(planId) ||
+        isAdmin()
+      );
+      allow create: if request.auth != null && isApprovedCoach();
+      allow update, delete: if request.auth != null && (
+        resource.data.coachId == request.auth.uid || isAdmin()
+      );
+    }
+
+    function isAdmin() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    function isApprovedCoach() {
+      let u = get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+      return u.role == 'coach' && u.status == 'approved';
+    }
+    function isCoachOfClient(clientId) {
+      let coach = get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+      let client = get(/databases/$(database)/documents/users/$(clientId)).data;
+      return coach.role == 'coach' && client.coachId == request.auth.uid;
+    }
+    function isClientOfPlan(planId) {
+      let u = get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+      return u.role == 'client' && u.planId == planId;
+    }
+  }
+}
