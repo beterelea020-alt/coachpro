@@ -13,7 +13,7 @@ import Toast from './components/Toast';
 function AppInner() {
   const { user, userData, loading } = useAuth();
   const { t } = useLang();
-  const [page, setPage] = useState('landing'); // بدأ بـ Landing Page
+  const [page, setPage] = useState('landing'); // landing | login | register
   const [toast, setToast] = useState(null);
 
   const showToast = (msg, type = 'ok') => {
@@ -21,6 +21,7 @@ function AppInner() {
     setTimeout(() => setToast(null), 3000);
   };
 
+  // ─── LOADING SCREEN ──────────────────────────────────────────────────────────
   if (loading) {
     return (
       <div className="loading-screen">
@@ -33,12 +34,12 @@ function AppInner() {
     );
   }
 
-  // ─── LOGGED IN ───────────────────────────────────────────────────────────────
+  // ─── LOGGED IN - SHOW DASHBOARD ──────────────────────────────────────────────
   if (user && userData) {
     const role = userData.role;
     const status = userData.status;
 
-    // Pending coach
+    // Pending coach - show pending message
     if (role === 'coach' && status === 'pending') {
       return (
         <div className="auth-page">
@@ -53,7 +54,7 @@ function AppInner() {
       );
     }
 
-    // Suspended account
+    // Suspended account - show suspended message
     if (status === 'suspended') {
       return (
         <div className="auth-page">
@@ -68,6 +69,7 @@ function AppInner() {
       );
     }
 
+    // Show dashboard based on role
     return (
       <>
         {role === 'admin'  && <AdminDashboard  showToast={showToast} />}
@@ -79,34 +81,60 @@ function AppInner() {
     );
   }
 
-  // ─── NOT LOGGED IN ────────────────────────────────────────────────────────────
-  // Landing Page
+  // ─── NOT LOGGED IN - SHOW LANDING/LOGIN/REGISTER ──────────────────────────────
+
+  // Landing Page - الصفحة الرئيسية
   if (page === 'landing') {
     return (
       <>
-        <CoachProLandingComplete />
+        <CoachProLandingComplete 
+          onGetStarted={() => setPage('register')}
+          onLogin={() => setPage('login')}
+        />
         <LangButton />
         {toast && <Toast msg={toast.msg} type={toast.type} />}
       </>
     );
   }
 
-  // Login و Register
-  return (
-    <>
-      {page === 'login'    && <LoginPage    onRegister={() => setPage('register')} showToast={showToast} />}
-      {page === 'register' && <RegisterPage onLogin={() => setPage('login')} showToast={showToast} />}
-      <LangButton />
-      {toast && <Toast msg={toast.msg} type={toast.type} />}
-    </>
-  );
+  // Login Page
+  if (page === 'login') {
+    return (
+      <>
+        <LoginPage 
+          onRegister={() => setPage('register')}
+          onBack={() => setPage('landing')}
+          showToast={showToast} 
+        />
+        <LangButton />
+        {toast && <Toast msg={toast.msg} type={toast.type} />}
+      </>
+    );
+  }
+
+  // Register Page
+  if (page === 'register') {
+    return (
+      <>
+        <RegisterPage 
+          onLogin={() => setPage('login')}
+          onBack={() => setPage('landing')}
+          showToast={showToast} 
+        />
+        <LangButton />
+        {toast && <Toast msg={toast.msg} type={toast.type} />}
+      </>
+    );
+  }
 }
 
+// Logout Button Component
 function LogoutBtn({ t }) {
   const { logout } = useAuth();
   return <button className="btn btn-ghost" onClick={logout}>{t.logout}</button>;
 }
 
+// WhatsApp Button
 function WhatsAppButton() {
   return (
     <a
@@ -140,6 +168,7 @@ function WhatsAppButton() {
   );
 }
 
+// Main App Component
 export default function App() {
   return (
     <LangProvider>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-export default function CoachProLanding() {
+export default function CoachProLanding({ onGetStarted, onLogin }) {
   const [lang, setLang] = useState('ar');
   const [clients, setClients] = useState(20);
   const [email, setEmail] = useState('');
@@ -20,6 +20,11 @@ export default function CoachProLanding() {
   const yearlyPrice = monthlyPrice * 12;
 
   const t = lang === 'ar' ? ar : en;
+
+  // الدوال
+  const handleGetStarted = () => {
+    if (onGetStarted) onGetStarted();
+  };
 
   return (
     <div style={styles.wrapper}>
@@ -48,7 +53,7 @@ export default function CoachProLanding() {
             <h1 style={styles.heroTitle}>{t.heroTitle}</h1>
             <p style={styles.heroSubtitle}>{t.heroSubtitle}</p>
             <div style={styles.heroCta}>
-              <button style={styles.btnPrimary}>{t.getStarted}</button>
+              <button onClick={handleGetStarted} style={styles.btnPrimary}>{t.getStarted}</button>
               <button style={styles.btnSecondary}>{t.learnMore}</button>
             </div>
             <div style={styles.heroStats}>
@@ -252,7 +257,7 @@ export default function CoachProLanding() {
         <div style={styles.container}>
           <h2 style={styles.ctaTitle}>{t.ctaTitle}</h2>
           <p style={styles.ctaSubtitle}>{t.ctaSubtitle}</p>
-          <button style={styles.btnLarge}>{t.startFree}</button>
+          <button onClick={handleGetStarted} style={styles.btnLarge}>{t.startFree}</button>
         </div>
       </section>
 
