@@ -21,7 +21,7 @@ function AppInner() {
     setTimeout(() => setToast(null), 3000);
   };
 
-  // ─── LOADING SCREEN ──────────────────────────────────────────────────────────
+  // ─── LOADING ──────────────────────────────────────────────────
   if (loading) {
     return (
       <div className="loading-screen">
@@ -34,12 +34,12 @@ function AppInner() {
     );
   }
 
-  // ─── LOGGED IN - SHOW DASHBOARD ──────────────────────────────────────────────
+  // ─── LOGGED IN → SHOW DASHBOARD ──────────────────────────────
   if (user && userData) {
     const role = userData.role;
     const status = userData.status;
 
-    // Pending coach - show pending message
+    // Pending coach
     if (role === 'coach' && status === 'pending') {
       return (
         <div className="auth-page">
@@ -47,14 +47,14 @@ function AppInner() {
             <div style={{ fontSize: 48, marginBottom: 16 }}>⏳</div>
             <h2 style={{ marginBottom: 8 }}>{t.pending}</h2>
             <p style={{ color: 'var(--text3)', fontSize: 14, marginBottom: 24 }}>{t.pendingMsg}</p>
-           <LogoutBtn t={t} />
+            <LogoutBtn t={t} />
           </div>
           <LangButton />
         </div>
       );
     }
 
-    // Suspended account - show suspended message
+    // Suspended
     if (status === 'suspended') {
       return (
         <div className="auth-page">
@@ -69,7 +69,7 @@ function AppInner() {
       );
     }
 
-    // Show dashboard based on role
+    // Show Dashboard
     return (
       <>
         {role === 'admin'  && <AdminDashboard  showToast={showToast} />}
@@ -81,9 +81,9 @@ function AppInner() {
     );
   }
 
-  // ─── NOT LOGGED IN - SHOW LANDING/LOGIN/REGISTER ──────────────────────────────
+  // ─── NOT LOGGED IN ──────────────────────────────────────────────
 
-  // Landing Page - الصفحة الرئيسية
+  // Landing Page
   if (page === 'landing') {
     return (
       <>
@@ -128,13 +128,11 @@ function AppInner() {
   }
 }
 
-// Logout Button Component
 function LogoutBtn({ t }) {
   const { logout } = useAuth();
   return <button className="btn btn-ghost" onClick={logout}>{t.logout}</button>;
 }
 
-// WhatsApp Button
 function WhatsAppButton() {
   return (
     <a
@@ -168,7 +166,6 @@ function WhatsAppButton() {
   );
 }
 
-// Main App Component
 export default function App() {
   return (
     <LangProvider>

@@ -21,8 +21,8 @@ export default function CoachProLanding({ onGetStarted, onLogin }) {
 
   const t = lang === 'ar' ? ar : en;
 
-  // الدوال
-  const handleGetStarted = () => {
+  // Handler للأزرار
+  const handleStartNow = () => {
     if (onGetStarted) onGetStarted();
   };
 
@@ -53,7 +53,7 @@ export default function CoachProLanding({ onGetStarted, onLogin }) {
             <h1 style={styles.heroTitle}>{t.heroTitle}</h1>
             <p style={styles.heroSubtitle}>{t.heroSubtitle}</p>
             <div style={styles.heroCta}>
-              <button onClick={handleGetStarted} style={styles.btnPrimary}>{t.getStarted}</button>
+              <button onClick={handleStartNow} style={styles.btnPrimary}>{t.getStarted}</button>
               <button style={styles.btnSecondary}>{t.learnMore}</button>
             </div>
             <div style={styles.heroStats}>
@@ -257,7 +257,7 @@ export default function CoachProLanding({ onGetStarted, onLogin }) {
         <div style={styles.container}>
           <h2 style={styles.ctaTitle}>{t.ctaTitle}</h2>
           <p style={styles.ctaSubtitle}>{t.ctaSubtitle}</p>
-          <button onClick={handleGetStarted} style={styles.btnLarge}>{t.startFree}</button>
+          <button onClick={handleStartNow} style={styles.btnLarge}>{t.startFree}</button>
         </div>
       </section>
 
