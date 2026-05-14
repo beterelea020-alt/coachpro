@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { LangProvider, useLang } from './contexts/LangContext';
-import CoachProLandingComplete from './pages/CoachProLandingComplete';
 import LoginPage from './pages/Login';
 import RegisterPage from './pages/Register';
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -13,7 +12,7 @@ import Toast from './components/Toast';
 function AppInner() {
   const { user, userData, loading } = useAuth();
   const { t } = useLang();
-  const [page, setPage] = useState('landing'); // landing | login | register
+  const [page, setPage] = useState('login'); // login | register
   const [toast, setToast] = useState(null);
 
   const showToast = (msg, type = 'ok') => {
@@ -21,7 +20,7 @@ function AppInner() {
     setTimeout(() => setToast(null), 3000);
   };
 
-  // ─── LOADING ──────────────────────────────────────────────────
+  // ─── LOADING ──────────────────────────────────────────────────────────────
   if (loading) {
     return (
       <div className="loading-screen">
@@ -34,7 +33,7 @@ function AppInner() {
     );
   }
 
-  // ─── LOGGED IN → SHOW DASHBOARD ──────────────────────────────
+  // ─── LOGGED IN → SHOW DASHBOARD ──────────────────────────────────────────
   if (user && userData) {
     const role = userData.role;
     const status = userData.status;
@@ -81,21 +80,7 @@ function AppInner() {
     );
   }
 
-  // ─── NOT LOGGED IN ──────────────────────────────────────────────
-
-  // Landing Page
-  if (page === 'landing') {
-    return (
-      <>
-        <CoachProLandingComplete 
-          onGetStarted={() => setPage('register')}
-          onLogin={() => setPage('login')}
-        />
-        <LangButton />
-        {toast && <Toast msg={toast.msg} type={toast.type} />}
-      </>
-    );
-  }
+  // ─── NOT LOGGED IN ──────────────────────────────────────────────────────────
 
   // Login Page
   if (page === 'login') {
@@ -103,7 +88,6 @@ function AppInner() {
       <>
         <LoginPage 
           onRegister={() => setPage('register')}
-          onBack={() => setPage('landing')}
           showToast={showToast} 
         />
         <LangButton />
@@ -118,7 +102,6 @@ function AppInner() {
       <>
         <RegisterPage 
           onLogin={() => setPage('login')}
-          onBack={() => setPage('landing')}
           showToast={showToast} 
         />
         <LangButton />
